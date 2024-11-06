@@ -7,15 +7,15 @@ import numpy as np
 
 class FreezeAnnealDecomposer(hybrid.Runnable):
 
-    def __init__(self, size, num_generations, num_parents_mating, proportion=0.2, fitness_batch_size=None, initial_population=None,
-                 sol_per_pop=None, num_genes=None, init_range_low=-4, init_range_high=4, parent_selection_type="sss",
+    def __init__(self, size, num_generations, sol_per_pop, num_parents_mating, proportion=0.2, fitness_batch_size=None, initial_population=None,
+                 num_genes=None, init_range_low=-4, init_range_high=4, parent_selection_type="sss",
                  keep_parents=-1, keep_elitism=1, K_tournament=3, crossover_type="single_point", crossover_probability=None,
                  mutation_type="random",mutation_probability=None, mutation_by_replacement=False, mutation_percent_genes='default',
                  mutation_num_genes=None,  random_mutation_min_val=-1.0, random_mutation_max_val=1.0,
                  allow_duplicate_genes=True, on_start=None, on_fitness=None, on_parents=None, on_crossover=None,
                  on_mutation=None, callback_generation=None, on_generation=None, on_stop=None, delay_after_gen=0.0,
                  save_best_solutions=False, save_solutions=False,
-                 suppress_warnings=False,
+                 suppress_warnings=True,
                  stop_criteria=None,
                  parallel_processing=None,
                  random_seed=None, **runopts):
@@ -104,8 +104,7 @@ class FreezeAnnealDecomposer(hybrid.Runnable):
                  mutation_type=self.mutation_type, mutation_probability=self.mutation_probability, mutation_by_replacement=self.mutation_by_replacement,
                  mutation_percent_genes=self.mutation_percent_genes, mutation_num_genes=self.mutation_num_genes, random_mutation_min_val=self.random_mutation_min_val,
                  random_mutation_max_val=self.random_mutation_max_val, gene_space=[0,1], allow_duplicate_genes=self.allow_duplicate_genes,
-                 on_start=self.on_start, on_fitness=self.on_fitness, on_parents=self.on_parents, on_crossover=self.on_crossover, on_mutation=self.on_mutation,
-                 callback_generation=self.callback_generation, on_generation=self.on_generation, on_stop=self.on_stop, delay_after_gen=self.delay_after_gen,
+                 on_start=self.on_start, on_fitness=self.on_fitness, on_parents=self.on_parents, on_crossover=self.on_crossover, on_mutation=self.on_mutation, on_generation=self.on_generation, on_stop=self.on_stop, delay_after_gen=self.delay_after_gen,
                  save_best_solutions=self.save_best_solutions, suppress_warnings=self.suppress_warnings, stop_criteria=self.stop_criteria,
                  parallel_processing=self.parallel_processing, random_seed=self.random_seed)
             ga_instance.run()
@@ -116,7 +115,7 @@ class FreezeAnnealDecomposer(hybrid.Runnable):
             new_sample = {variables[i]: best_solution[i] for i in range(num_genes)}
             state = State.from_sample(updated_sample(sample, new_sample), state.problem)
 
-            print(state.samples.first.energy)
+            print(f"Best found energy by the GA at current iteration: {state.samples.first.energy}")
 
             # Create subproblem freezing the variable with the lowest variance, is this stays constant al least the self.proportion% of the times
             newsampleset = ga_instance.solutions[-self.sol_per_pop:]

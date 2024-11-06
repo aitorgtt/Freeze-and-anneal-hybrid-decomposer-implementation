@@ -1,0 +1,5 @@
+numpy
+pygad==2.19.2
+dwave-hybrid
+dimod
+dwave-system
